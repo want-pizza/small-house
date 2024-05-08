@@ -1,78 +1,59 @@
 using System;
 using UnityEngine;
-using System.Collections;
 
 public class CameraController : MonoBehaviour
 {
     [SerializeField] Transform player;
-    [SerializeField] float followSpeed = 2f;
-    [SerializeField] float mouseSensitivity = 2f;
-    [SerializeField] float aimDistanceMult = 2f;
-    [SerializeField] float aimSpeed = 0.01f;
-    [SerializeField] float maxDistanceFromPlayer = 5f;
-    private bool returning = false;
+    [SerializeField] Vector2 rectangleSize = new Vector2(10f, 5f); 
+    [SerializeField] float baseAimSpeed = 10f;
+    [SerializeField] float turningSpeed = 5f;
+    [SerializeField] float followingPlayerSpeed = 4f;
 
-    private Vector3 offset;
-
-    void Start()
-    {
-        offset = transform.position - player.position;
-    }
-
-    void Update()
+    private void Update()
     {
         if (Input.GetMouseButton(1))
         {
             Aiming();
         }
-        else FollowPlayer();
+        else
+        {
+            FollowPlayer(followingPlayerSpeed);
+        }
     }
 
     private void Aiming()
     {
-        if (returning) 
-        {
-            FollowPlayer(0.3f);
-            return;
-        }
+        Vector3 mousePosition = Input.mousePosition;
 
-        Vector3 mousePos = Input.mousePosition; 
+        Vector3 clickPosition = Camera.main.ScreenToWorldPoint(mousePosition);
+        clickPosition.z = -10f;
 
-        Vector3 targetPos = Camera.main.ScreenToWorldPoint(mousePos);
+        float distance = Vector2.Distance(player.position, clickPosition);
+        float speedMultiplier = Mathf.Clamp01(distance / rectangleSize.x);
 
-        float screenEdgeDistance = 1f; 
+        Vector3 direction = (clickPosition - player.position).normalized;
+        Vector3 newPosition = transform.position + direction * baseAimSpeed * speedMultiplier * Time.deltaTime;
 
-        Vector3 direction = (targetPos - transform.position).normalized;
+        newPosition.x = Mathf.Clamp(newPosition.x, player.position.x - rectangleSize.x / 2, player.position.x + rectangleSize.x / 2);
+        newPosition.y = Mathf.Clamp(newPosition.y, player.position.y - rectangleSize.y / 2, player.position.y + rectangleSize.y / 2);
+        newPosition.z = -10f;
 
-        Vector3 newPosition = transform.position + direction * Mathf.Min((Camera.main.orthographicSize * Camera.main.aspect) - screenEdgeDistance,
-            (targetPos - transform.position).magnitude);
-        newPosition.z = -10;
-
-        float distanceFromPlayer = Vector3.Distance(transform.position, new Vector3(player.position.x, player.position.y, -10));
-        if (distanceFromPlayer < maxDistanceFromPlayer)
-        {
-            transform.position = Vector3.Lerp(transform.position, newPosition, aimSpeed * Time.deltaTime);
-        }
-        else 
-        { 
-            returning = true;
-            StartCoroutine(SetReturningFalse(1f)); 
-        }
-    }
-
-    IEnumerator SetReturningFalse(float time)
-    {
-        yield return new WaitForSeconds(time);
-        returning = false;
+        transform.position = newPosition;
     }
 
     private void FollowPlayer(float speed = 2f)
     {
-        if (transform.position != new Vector3(player.position.x, player.position.y, -10))
+        if (transform.position != new Vector3(0,0,-10))
         {
-            Vector3 targetPosition = new Vector3(player.position.x, player.position.y, 0) + offset;
-            transform.position = Vector3.Lerp(transform.position, targetPosition, speed * Time.deltaTime);
+            if (Mathf.Abs(transform.position.x) < 0.05f && Mathf.Abs(transform.position.y) < 0.05f)
+            {
+                transform.position = new Vector3(0, 0, -10);
+            }
+            else
+            {
+                Vector3 targetPosition = new Vector3(player.position.x, player.position.y, -10);
+                transform.position = Vector3.Lerp(transform.position, targetPosition, speed * Time.deltaTime);
+            }
         }
     }
-
 }

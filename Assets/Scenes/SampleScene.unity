@@ -341,11 +341,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 1584000006}
-  followSpeed: 2
-  mouseSensitivity: 2
-  aimDistanceMult: 2
-  aimSpeed: 0.01
-  maxDistanceFromPlayer: 5
+  rectangleSize: {x: 10, y: 5}
+  baseAimSpeed: 10
+  turningSpeed: 5
+  followingPlayerSpeed: 4
 --- !u!1 &756973407
 GameObject:
   m_ObjectHideFlags: 0

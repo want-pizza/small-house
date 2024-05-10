@@ -1,4 +1,4 @@
 public interface IBuff
 {
-    PlayerStats ApplyBuff(PlayerStats stats);
+    Stats ApplyBuff(Stats stats);
 }

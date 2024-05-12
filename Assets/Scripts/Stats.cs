@@ -1,6 +1,7 @@
-public struct Stats
+using UnityEngine;
+using System.Collections.Generic;
+[CreateAssetMenu(fileName = "BodyStats", menuName = "Stats")]
+public class Stats : ScriptableObject
 {
-    public float health;
-    public float speed;
-    public float clearDamage;
+    public Dictionary<IStat, float> stats { get; set; }
 }

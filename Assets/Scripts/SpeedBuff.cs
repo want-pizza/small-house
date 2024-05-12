@@ -1,8 +1,22 @@
+using System.Collections.Generic;
+using UnityEngine;
+
 public class SpeedBuff : IBuff
 {
-    public Stats ApplyBuff(Stats stats)
+    public List<IStat> keys { get; set; }
+
+    public SpeedBuff(List<IStat> _keys)
     {
-        stats.speed *= 2;
-        return stats;
+        keys = _keys;
+    }
+
+    public void ApplyBuff(Dictionary<IStat, float> stats)
+    {
+        foreach (IStat i in keys)
+        {
+            float stat = stats.GetValueOrDefault(i);
+            
+            stats[i] = stat * 2;
+        }
     }
 }

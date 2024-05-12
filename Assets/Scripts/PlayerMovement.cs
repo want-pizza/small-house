@@ -4,14 +4,12 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    [SerializeField] float maxSpeed = 2f;
     [SerializeField] float defSlowdown = 1f;
     private float currentSlowdown;
     private float currentSpeed;
 
     private void Start()
     {
-        currentSpeed = maxSpeed;
         currentSlowdown = defSlowdown;
     }
 
@@ -22,6 +20,12 @@ public class PlayerMovement : MonoBehaviour
 
     private void Move()
     {
-        transform.position += new Vector3(Input.GetAxis("Horizontal") * maxSpeed / currentSlowdown, Input.GetAxis("Vertical") * maxSpeed / currentSlowdown, 0) * Time.deltaTime;
+        transform.position += CalculateMovementDirection() * currentSpeed / currentSlowdown * Time.deltaTime;
+    }
+
+    private Vector3 CalculateMovementDirection()
+    {
+        Vector3 rawInput = new Vector3(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+        return rawInput.normalized;
     }
 }

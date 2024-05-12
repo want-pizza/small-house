@@ -34,7 +34,7 @@ public class StatsServise : IBuffable
 
         foreach(IBuff buff in buffs)
         {
-            CurrentStats = buff.ApplyBuff(CurrentStats);
+            buff.ApplyBuff(CurrentStats.stats);
         }
     }
 }

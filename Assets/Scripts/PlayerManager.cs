@@ -2,18 +2,15 @@ using UnityEngine;
 
 public class PlayerManager : MonoBehaviour
 {
+    [SerializeField] Stats stats;
     private StatsServise playerServise;
 
     private void Start()
     {
-        Stats stats = new Stats
+        if (stats != null)
         {
-            health = 100,
-            speed = 2,
-            clearDamage = 4
-        };
-
-        Init(new StatsServise(stats));
+            Init(new StatsServise(stats));
+        }
     }
 
     public void Init(StatsServise servise)

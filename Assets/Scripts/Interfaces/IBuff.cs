@@ -1,4 +1,7 @@
+using System.Collections.Generic;
 public interface IBuff
 {
-    Stats ApplyBuff(Stats stats);
+    List<IStat> keys { get; set; }
+    void ApplyBuff(Dictionary<IStat, float> stats);
+
 }
